@@ -1,0 +1,94 @@
+Optimal Binary Search Trees
+1. Implement the Optimal Binary Search Tree algorithm for the keys A,B,C,D with frequencies 0.1,0.2,0.4,0.3 Write the code using any programming language to construct the OBST for the given keys and frequencies. Execute your code and display the resulting OBST and its cost. Print the cost and root  matrix. 
+Input N =4, Keys = {A,B,C,D} Frequencies =  {01.02.,0.3,0.4}
+Output : 1.7
+
+def optimal_bst(keys, freq):
+    n = len(keys)
+    
+    # Initialize cost and root matrices
+    cost = [[0] * n for _ in range(n)]
+    root = [[0] * n for _ in range(n)]
+    
+    # Initialize cost for single keys
+    for i in range(n):
+        cost[i][i] = freq[i]
+        root[i][i] = i
+    
+    # Build cost and root tables
+    for length in range(2, n+1):  # length of subtree
+        for i in range(n - length + 1):
+            j = i + length - 1
+            cost[i][j] = float('inf')
+            sum_freq = sum(freq[i:j+1])
+            
+            for r in range(i, j+1):
+                c = sum_freq + (cost[i][r-1] if r > i else 0) + (cost[r+1][j] if r < j else 0)
+                if c < cost[i][j]:
+                    cost[i][j] = c
+                    root[i][j] = r
+    
+    # Return the cost and root matrix
+    return cost, root
+
+# Given keys and frequencies
+keys = ['A', 'B', 'C', 'D']
+freq = [0.1, 0.2, 0.4, 0.3]
+
+# Compute OBST
+cost, root = optimal_bst(keys, freq)
+
+# Print cost matrix
+print("Cost matrix:")
+for row in cost:
+    print(row)
+
+# Print root matrix
+print("\nRoot matrix:")
+for row in root:
+    print(row)
+
+# Print the minimum cost of the optimal BST
+min_cost = cost[0][len(keys)-1]
+print("\nMinimum cost of optimal BST:", min_cost)
+\|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||\\
+BINARY SEARCH
+
+
+def binary_search(arr, x):
+    left, right = 0, len(arr) - 1
+    comparisons = 0
+    
+    while left <= right:
+        mid = left + (right - left) // 2
+        comparisons += 1
+        
+        # Check if x is present at mid
+        if arr[mid] == x:
+            return mid, comparisons
+        # If x is greater, ignore left half
+        elif arr[mid] < x:
+            left = mid + 1
+        # If x is smaller, ignore right half
+        else:
+            right = mid - 1
+    
+    # Element is not present in array
+    return -1, comparisons
+
+# Test the binary search function
+arr = [5, 10, 15, 20, 25, 30, 35, 40, 45]
+element = 20
+
+# Perform binary search
+index, comparisons = binary_search(arr, element)
+
+# Output the results
+if index != -1:
+    print(f"Element {element} found at index {index}.")
+else:
+    print(f"Element {element} not found in the array.")
+
+print(f"Number of comparisons made: {comparisons}")
+
+
